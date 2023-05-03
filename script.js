@@ -24,6 +24,25 @@ PIXI.loader.add("bg.png");
 PIXI.loader.add("blockbase.png");
 PIXI.loader.add("blocktx.png");
 
+function screenResize() {
+    let wid = widRatio * window.innerWidth;//ゲームを表示できる最大横幅
+    let hei = heiRatio * window.innerHeight;//ゲームを表示できる最大縦幅
+    let x = width;
+    let y = height;
+    app.stage.scale.x = app.stage.scale.y = 1;//スクリーン幅が十分の時は画面倍率を1にする
+    resizeRatio = Math.min(wid / width, hei / height);//横幅と縦幅の、ゲーム画面に対する比のうち小さい方に合わせる
+    if (wid < width || hei < height) {//スクリーン幅が足りないとき
+        //リサイズ倍率を調整
+        x = width * resizeRatio;
+        y = height * resizeRatio;
+        app.stage.scale.x = resizeRatio;
+        app.stage.scale.y = resizeRatio;
+    }
+    app.renderer.resize(x, y);//レンダラーをリサイズ
+}
+window.addEventListener("load", screenResize);//ロード時に画面サイズを変える
+window.addEventListener('resize', screenResize, false);//ウィンドウの大きさが変わったらその都度画面サイズを変える
+
 // プリロード処理が終わったら呼び出されるイベント
 PIXI.loader.load((loader, resources) => {
     /**
