@@ -7,8 +7,13 @@ document.body.appendChild(app.view);
 // ゲームcanvasのcssを定義する
 // ここで定義した画面サイズ(width,height)は実際に画面に表示するサイズ
 app.renderer.view.style.position = "relative";
-app.renderer.view.style.width = "500px";
-app.renderer.view.style.height = "750px";
+
+//現在のブラウザサイズの取得
+app.renderer.view.style.height = document.body.clientHeight - 30;
+app.renderer.view.style.width = ((app.renderer.view.style.height) * 2) / 3;
+//app.renderer.view.style.height = "1500px";
+//app.renderer.view.style.width = "1000px";
+
 app.renderer.view.style.display = "block";
 
 // canvasの周りを点線枠で囲う (canvasの位置がわかりやすいので入れている)
@@ -65,7 +70,7 @@ PIXI.loader.load((loader, resources) => {
         }
     }
 
-    //最大値・最小値を引数に持つ関数
+    //最小値・最大値を引数に持つ関数
     function getRandom(min, max) {
         var random = Math.floor(Math.random() * (max + 1 - min)) + min;
 
@@ -195,7 +200,6 @@ PIXI.loader.load((loader, resources) => {
         {
             // スコアテキストを毎フレームアップデートする
             text.text = `SCORE:${score}m`;
-
             //if (score == 0) return; // スコアが０の時(球に触っていないとき)はここで終了させる
 
             player.x += playerVx; // プレイヤーに速度を加算
@@ -290,6 +294,10 @@ PIXI.loader.load((loader, resources) => {
             blockd.y++;
             score++; // スコアを１増やす
 
+            //ゲーム画面のサイズを常に最適化
+            app.renderer.view.style.height = document.body.clientHeight - 30;
+            app.renderer.view.style.width = ((app.renderer.view.style.height) * 2) / 3;
+
         }
 
         // ゲームループ関数を毎フレーム処理の関数として追加
@@ -343,7 +351,7 @@ PIXI.loader.load((loader, resources) => {
         });
         retryButton.x = 100; // ボタンの座標指定
         retryButton.y = 600; // ボタンの座標指定
-        endScene.addChild(retryButton);　// ボタンを結果画面シーンに追加
+        endScene.addChild(retryButton); // ボタンを結果画面シーンに追加
 
         /**
          * 自作のボタン生成関数を使って、ツイートボタンを生成
@@ -352,9 +360,9 @@ PIXI.loader.load((loader, resources) => {
         const tweetButton = createButton("ツイート", 100, 60, 0x0000ff, () => {
             //ツイートＡＰＩに送信
             //結果ツイート時にURLを貼るため、このゲームのURLをここに記入してURLがツイート画面に反映されるようにエンコードする
-            const url = encodeURI("https://hothukurou.com"); // ツイートに載せるURLを指定(文字はエンコードする必要がある)
+            const url = encodeURI("https://aomeyu.github.io/Jumpgame/"); // ツイートに載せるURLを指定(文字はエンコードする必要がある)
             //window.open(`http://twitter.com/intent/tweet?text=SCORE:${score}点で力尽きた&hashtags=sample&url=${url}`); //ハッシュタグをsampleにする
-            window.open(`http://twitter.com/intent/tweet?text=【ジャンプするだけのゲーム】%0ASCORE: ${score}mまで跳んだ！`); //「%0A」は改行コード
+            window.open(`http://twitter.com/intent/tweet?text=【ジャンプするだけのゲーム】%0ASCORE: ${score}mまで跳んだ！%0A↓プレイはこちら↓%0A&url=${url}`); //「%0A」は改行コード
         });
         tweetButton.x = 300; // ボタンの座標指定
         tweetButton.y = 600; // ボタンの座標指定
