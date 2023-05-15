@@ -177,7 +177,7 @@ PIXI.loader.load((loader, resources) => {
         bg.on("pointerdown", () =>      // クリック時に発動する関数
         {
             if (playerVy == 0) {
-                playerVy = -12; // プレイヤーのＹ速度を-12にする(上に飛ぶようにしている)
+                playerVy = -13; // プレイヤーのＹ速度を-13にする(上に飛ぶようにしている)
             }
         });
 
@@ -214,7 +214,7 @@ PIXI.loader.load((loader, resources) => {
                 player.x = 0; // xの値を0にする(次のフレームで反射処理させないために必要)
                 playerVx = -playerVx; // 速度を反転して反射の挙動にする
             }
-            playerVy += 0.2; // yの速度に0.2を足していくと、重力みたいな挙動になる
+            playerVy += 0.3; // yの速度に0.2を足していくと、重力みたいな挙動になる
             if (player.y >= 800) // 球が画面下に消えたら
             {
                 createEndScene(); // 結果画面を表示する
@@ -287,11 +287,11 @@ PIXI.loader.load((loader, resources) => {
                 blockd.y = -40;
             }
 
-            blockbase.y++;
-            blocka.y++;
-            blockb.y++;
-            blockc.y++;
-            blockd.y++;
+            blockbase.y += 1.5;
+            blocka.y += 1.5;
+            blockb.y += 1.5;
+            blockc.y += 1.5;
+            blockd.y += 1.5;
             score++; // スコアを１増やす
 
             //ゲーム画面のサイズを常に最適化
@@ -302,6 +302,56 @@ PIXI.loader.load((loader, resources) => {
 
         // ゲームループ関数を毎フレーム処理の関数として追加
         addGameLoop(gameLoop);
+    }
+
+    /**
+     * ゲームのスタートシーンを生成する関数
+     */
+    function createStartScene() {
+        // 他に表示しているシーンがあれば削除
+        removeAllScene();
+        // 毎フレームイベントを削除
+        removeAllGameLoops();
+
+        // ゲーム用のシーン表示。引数に背景も読み込み
+        const startScene = new PIXI.Container();
+        // シーンを画面に追加する
+        app.stage.addChild(startScene);
+
+        // 背景を表示するスプライトオブジェクトを実体化させる
+        const bg = new PIXI.Sprite(resources["bg.png"].texture); //引数には、プリロードしたURLを追加する
+        bg.x = 0; // x座標
+        bg.y = 0; // y座標
+
+        startScene.addChild(bg); // 背景をシーンに追加
+
+        // テキストに関するパラメータを定義する(ここで定義した意外にもたくさんパラメータがある)
+        const textStyle = new PIXI.TextStyle({
+            fontFamily: "Arial", // フォント
+            fontSize: 32,// フォントサイズ
+            fill: 0xfcbb08, // 色(16進数で定義する これはオレンジ色)
+            dropShadow: true, // ドロップシャドウを有効にする（右下に影をつける）
+            dropShadowDistance: 2, // ドロップシャドウの影の距離
+        });
+
+        // テキストオブジェクトの定義
+        const text = new PIXI.Text(`ジャンプするだけのゲーム`, textStyle); // 結果画面のテキスト
+        text.anchor.x = 0.5; // アンカーのxを中央に指定
+        text.x = 250; // 座標指定 (xのアンカーが0.5で中央指定なので、テキストのx値を画面中央にすると真ん中にテキストが表示される)
+        text.y = 300; // 座標指定 (yのアンカーはデフォルトの0なので、画面上から200の位置にテキスト表示)
+        startScene.addChild(text); // スタート画面シーンにテキスト追加
+
+        /**
+         * 自作のボタン生成関数を使って、もう一度ボタンを生成
+         * 引数の内容はcreateButton関数を参考に
+         */
+        const startButton = createButton("スタート", 100, 60, 0xff0000, () => {
+            // クリックした時の処理
+            createGameScene(); // ゲームシーンを生成する
+        });
+        startButton.x = 190; // ボタンの座標指定
+        startButton.y = 550; // ボタンの座標指定
+        startScene.addChild(startButton); // ボタンを結果画面シーンに追加
     }
 
     /**
@@ -370,5 +420,5 @@ PIXI.loader.load((loader, resources) => {
     }
 
     // 起動直後はゲームシーンを追加する
-    createGameScene();
+    createStartScene();
 });
