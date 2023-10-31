@@ -177,7 +177,7 @@ PIXI.loader.load((loader, resources) => {
         bg.on("pointerdown", () =>      // クリック時に発動する関数
         {
             if (playerVy == 0) {
-                playerVy = -15; // プレイヤーのＹ速度を-13にする(上に飛ぶようにしている)
+                playerVy = -15; // プレイヤーのＹ速度を-15にする(上に飛ぶようにしている)
             }
         });
 
