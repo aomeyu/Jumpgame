@@ -70,7 +70,7 @@ PIXI.loader.load((loader, resources) => {
         }
     }
 
-    //最小値・最大値を引数に持つ関数
+    //最小値・最大値を引数に持ちランダムな数を返す関数
     function getRandom(min, max) {
         var random = Math.floor(Math.random() * (max + 1 - min)) + min;
 
@@ -177,7 +177,7 @@ PIXI.loader.load((loader, resources) => {
         bg.on("pointerdown", () =>      // クリック時に発動する関数
         {
             if (playerVy == 0) {
-                playerVy = -13; // プレイヤーのＹ速度を-13にする(上に飛ぶようにしている)
+                playerVy = -15; // プレイヤーのＹ速度を-13にする(上に飛ぶようにしている)
             }
         });
 
@@ -214,7 +214,9 @@ PIXI.loader.load((loader, resources) => {
                 player.x = 0; // xの値を0にする(次のフレームで反射処理させないために必要)
                 playerVx = -playerVx; // 速度を反転して反射の挙動にする
             }
-            playerVy += 0.3; // yの速度に0.2を足していくと、重力みたいな挙動になる
+            if (playerVy < 9) {
+                playerVy += 0.3; // yの速度に0.3を足していくと、重力みたいな挙動になる
+            }
             if (player.y >= 800) // 球が画面下に消えたら
             {
                 createEndScene(); // 結果画面を表示する
